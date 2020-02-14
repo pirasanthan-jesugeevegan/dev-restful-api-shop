@@ -2,9 +2,19 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 
 const productRoutes = require('./api/routes/products')
 const orderRoutes = require('./api/routes/orders')
+
+/// Envir veriable name
+mongoose.connect('mongodb+srv://node-rest-shop:node@node-restp-shop-etefp.mongodb.net/test?retryWrites=true&w=majority',
+    { useUnifiedTopology: true, useNewUrlParser: true },
+    () => console.log('connected to DB'));
+
+mongoose.Promise = global.Promise
+
+
 
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: false }));
