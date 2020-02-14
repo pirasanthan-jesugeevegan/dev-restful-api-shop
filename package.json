@@ -1,0 +1,27 @@
+{
+  "name": "restful-api-shop",
+  "version": "1.0.0",
+  "description": "Restful API that allows users to create/edit/delete producs & Make order based on selected products ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pirasanthan-jesugeevegan/Restful-API-Shop.git"
+  },
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "author": "Pirasanthan Jesugeevegan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pirasanthan-jesugeevegan/Restful-API-Shop/issues"
+  },
+  "homepage": "https://github.com/pirasanthan-jesugeevegan/Restful-API-Shop#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
