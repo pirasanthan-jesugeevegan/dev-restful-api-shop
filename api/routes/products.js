@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
 
-const Product = require('../models/products');
+const Product = require('../models/product');
 
 router.get('/', (req, res, next) => {
     Product.find()
@@ -46,7 +46,15 @@ router.post('/', (req, res, next) => {
             console.log(result);
             res.status(201).json({
                 message: "Created product successfuly",
-                createdProduct: result
+                createdProduct: { // Only uses these property to create 
+                    name: result.name,
+                    price: result.price,
+                    _id: result._id,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/products/' + result._id
+                    }
+                }
             });
         })
         .catch(err => {
@@ -61,12 +69,13 @@ router.post('/', (req, res, next) => {
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
+        .select('name price _id productImage') //only show these propertys
         .exec()
         .then(doc => {
             console.log("From database", doc);
             if (doc) {
                 res.status(200).json({
-                    product: doc // wrap it in a product object
+                    product: doc, // wrap it in a product object
                 });
 
             } else {
@@ -92,7 +101,7 @@ router.patch('/:productId', (req, res, next) => {
         .then(result => {
             res.status(200).json({
                 result,
-                message: 'Product uodated'
+                message: 'Product updated'
             });
         })
         .catch(err => {
