@@ -1,6 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/');//path for image file
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname) //save image as orginal name
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    //reject image file
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 const Product = require('../models/product');
 
@@ -16,6 +37,7 @@ router.get('/', (req, res, next) => {
                         _id: doc._id,
                         name: doc.name,
                         price: doc.price,
+                        productImage: doc.productImage,
                         request: {
                             type: 'GET',
                             url: 'http://localhost:3000/products/' + doc._id
@@ -33,12 +55,13 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
+router.post("/", upload.single('productImage'), (req, res, next) => {
     // id will be an object with the propertys
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        productImage: req.file.path
     });
     product
         .save() //save is a method provided by mongoos 
@@ -47,9 +70,8 @@ router.post('/', (req, res, next) => {
             res.status(201).json({
                 message: "Created product successfuly",
                 createdProduct: { // Only uses these property to create 
-                    name: result.name,
-                    price: result.price,
                     _id: result._id,
+                    name: result.name,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/products/' + result._id
