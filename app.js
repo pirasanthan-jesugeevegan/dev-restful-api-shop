@@ -6,6 +6,7 @@ const mongoose = require('mongoose')
 
 const productRoutes = require('./api/routes/products')
 const orderRoutes = require('./api/routes/orders')
+const userRouters = require('./api/routes/users')
 
 /// Envir veriable name
 mongoose.connect('mongodb+srv://node-rest-shop:node@node-restp-shop-etefp.mongodb.net/test?retryWrites=true&w=majority',
@@ -36,7 +37,7 @@ app.use((req, res, next) => {
 
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
-
+app.use('/user', userRouters)
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
