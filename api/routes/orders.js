@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose')
 
+const checkAuth = require('../auth/check-auth')
+
 const Order = require('../models/order')
 const Product = require('../models/product')
 
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Order.find()
         .select('product quantity _id') //only show these propertys
         .populate('product', '_id name price')//populating the product details & only how id,product and price
@@ -34,7 +36,7 @@ router.get('/', (req, res, next) => {
         })
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     Product.findById(req.body.productId)//check if product exsist
         .then(product => { //then exicut post request
             if (!product) { //if product is not = to product 
@@ -68,7 +70,7 @@ router.post('/', (req, res, next) => {
         });
 });
 
-router.get('/:orderId', (req, res, next) => {
+router.get('/:orderId', checkAuth, (req, res, next) => {
     Order.findById(req.params.orderId)
         .select('_id product quantity')
         .populate('product', '_id name price')//populating the product details & only how id,product and price
@@ -91,7 +93,7 @@ router.get('/:orderId', (req, res, next) => {
         });
 });
 
-router.delete('/:orderId', (req, res, next) => {
+router.delete('/:orderId', checkAuth, (req, res, next) => {
     Order.remove({ _id: req.params.orderId })
         .exec()
         .then(result => {
